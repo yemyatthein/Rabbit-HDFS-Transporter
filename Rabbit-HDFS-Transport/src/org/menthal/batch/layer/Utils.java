@@ -13,21 +13,22 @@ public class Utils {
 	
 	public static void writeToHDFS(ArrayList<String> data, String hdfsPath) {
 		Configuration conf = new Configuration();
-		Path path = new Path(hdfsPath);
+		Path tempPath = new Path(hdfsPath + "_tmp");
 		FileSystem fs;
 		try {
-			fs = FileSystem.get(conf);
+			fs = FileSystem.get(conf);			
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
-					fs.create(path)));
+					fs.create(tempPath)));
 			for (String item : data) {
 				bw.write(item + "\n");
 			}
 			bw.flush();
 			bw.close();
+			Path actualPath = new Path(hdfsPath);
+			fs.rename(tempPath, actualPath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
 	
 }
