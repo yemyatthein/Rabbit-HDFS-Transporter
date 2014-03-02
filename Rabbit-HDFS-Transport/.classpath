@@ -20,5 +20,8 @@
 	<classpathentry kind="lib" path="/home/yemyat/hadoop-current/lib/commons-logging-api-1.0.4.jar"/>
 	<classpathentry kind="lib" path="/home/yemyat/hadoop-current/lib/commons-math-2.1.jar"/>
 	<classpathentry kind="lib" path="/home/yemyat/hadoop-current/lib/commons-net-3.1.jar"/>
+	<classpathentry kind="lib" path="/home/yemyat/hadoop-current/lib/jackson-core-asl-1.8.8.jar"/>
+	<classpathentry kind="lib" path="/home/yemyat/hadoop-current/lib/jackson-mapper-asl-1.8.8.jar"/>
+	<classpathentry kind="lib" path="/home/yemyat/java-libs/json-simple-1.1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

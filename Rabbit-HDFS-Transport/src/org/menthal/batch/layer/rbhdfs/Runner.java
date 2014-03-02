@@ -12,6 +12,6 @@ public class Runner {
 
 	public static void main(String[] args) {
 		RhdfsConfiguration config = new RhdfsConfiguration();
-		Runner.startTransport(config, 2);
+		Runner.startTransport(config, 1);
 	}
 }

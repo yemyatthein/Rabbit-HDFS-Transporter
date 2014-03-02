@@ -67,7 +67,7 @@ public class RabbitToHdfsConsumer implements Runnable {
 		if (hdfsFilename == null) {
 			int timestamp = (int) (System.currentTimeMillis() / 1000L);
 			String processId = ManagementFactory.getRuntimeMXBean().getName();
-			hdfsFilename = "data_" + consumerId + "_" + timestamp + "_"
+			hdfsFilename = "data_" + timestamp + "_" + consumerId + "_"
 					+ processId;
 		}
 		if (eventCollection.size() < config.getInt(Constants.EVENT_LIMIT)) {
