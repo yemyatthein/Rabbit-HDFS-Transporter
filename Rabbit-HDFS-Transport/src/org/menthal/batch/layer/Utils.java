@@ -53,6 +53,14 @@ public class Utils {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void copyAndMerge(String[] srcDirs, String destDir) {
+		try {
+			CopyAndMergeJob.runJob(srcDirs, destDir);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	private static class MergeAndPartitionJob {
 
@@ -116,6 +124,43 @@ public class Utils {
 			job.setOutputValueClass(Text.class);
 			FileInputFormat.addInputPath(job, new Path(otherArgs[0]));
 			FileOutputFormat.setOutputPath(job, new Path(otherArgs[1]));
+			System.exit(job.waitForCompletion(true) ? 0 : 1);
+		}
+	}
+
+	private static class CopyAndMergeJob {
+
+		public static class OnlyValueMapper extends
+				Mapper<Object, Text, NullWritable, Text> {
+			public void map(Object key, Text value, Context context)
+					throws IOException, InterruptedException {
+				context.write(NullWritable.get(), value);
+			}
+		}
+
+		public static class OnlyValueReducer extends
+				Reducer<NullWritable, Text, NullWritable, Text> {
+			public void reduce(NullWritable key, Iterable<Text> values,
+					Context context) throws IOException, InterruptedException {
+				for (Text value : values) {
+					context.write(NullWritable.get(), value);
+				}
+			}
+		}
+
+		public static void runJob(String[] inputs, String output)
+				throws Exception {
+			Configuration conf = new Configuration();
+			Job job = new Job(conf, "copy_merge_job");
+			job.setJarByClass(CopyAndMergeJob.class);
+			job.setMapperClass(OnlyValueMapper.class);
+			job.setReducerClass(OnlyValueReducer.class);
+			job.setOutputKeyClass(NullWritable.class);
+			job.setOutputValueClass(Text.class);
+			for (String input : inputs) {
+				FileInputFormat.addInputPath(job, new Path(input));
+			}
+			FileOutputFormat.setOutputPath(job, new Path(output));
 			System.exit(job.waitForCompletion(true) ? 0 : 1);
 		}
 	}
