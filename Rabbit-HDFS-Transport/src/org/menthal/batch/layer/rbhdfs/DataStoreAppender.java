@@ -92,6 +92,11 @@ public class DataStoreAppender {
 				Path destPath = new Path(destDir + "/" + fstatus.getPath().getName());
 				if(fs.exists(destPath)) {
 					// TODO: Run hadoop job for compaction if required
+					FileStatus[] fsaInside = fs.listStatus(fstatus.getPath());
+					for(FileStatus fstatusInside: fsaInside) {
+						destPath = new Path(destDir + "/" + fstatus.getPath().getName() + "/" + fstatusInside.getPath());
+						FileUtil.copy(fs, fstatusInside.getPath(), fs, destPath, true, hdfsConfig);
+					}
 				}
 				else {
 					FileUtil.copy(fs, fstatus.getPath(), fs, destPath, true, hdfsConfig);
