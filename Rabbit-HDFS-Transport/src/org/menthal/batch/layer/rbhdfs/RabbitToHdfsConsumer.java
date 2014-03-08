@@ -40,7 +40,7 @@ public class RabbitToHdfsConsumer implements Runnable {
 					true, false, false, null);
 			channel.basicQos(1);
 
-			System.out.println("Waiting for messages on the queue.");
+			//System.out.println("Waiting for messages on the queue.");
 
 			QueueingConsumer consumer = new QueueingConsumer(channel);
 			channel.basicConsume(config.getString(Constants.RQ_ROUTING_KEY),
@@ -73,10 +73,10 @@ public class RabbitToHdfsConsumer implements Runnable {
 		if (eventCollection.size() < config.getInt(Constants.EVENT_LIMIT)) {
 			eventCollection.add(message);
 		}
-		System.out.println(consumerId + " holds " + eventCollection.size()
-				+ " events");
+		//System.out.println(consumerId + " holds " + eventCollection.size()
+				//+ " events");
 		if (eventCollection.size() == config.getInt(Constants.EVENT_LIMIT)) {
-			System.out.println("Time to write to HDFS");
+			//System.out.println("Time to write to HDFS");
 			String path = config.getString(Constants.HDFS_BUFFER_PATH) + "/"
 					+ hdfsFilename;
 			Utils.writeToHDFS(eventCollection, path);

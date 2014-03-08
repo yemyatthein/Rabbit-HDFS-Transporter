@@ -90,29 +90,34 @@ public class DataStoreAppender {
 			for(FileStatus fstatus: fsa) {
 				if(!fstatus.isDir()) continue;
 				Path destPath = new Path(destDir + "/" + fstatus.getPath().getName());
-				if(fs.exists(destPath)) {
+				if(fs.exists(destPath)) {					
 					// TODO: Run hadoop job for compaction if required
 					FileStatus[] fsaInside = fs.listStatus(fstatus.getPath());
-					for(FileStatus fstatusInside: fsaInside) {
-						destPath = new Path(destDir + "/" + fstatus.getPath().getName() + "/" + fstatusInside.getPath());
-						FileUtil.copy(fs, fstatusInside.getPath(), fs, destPath, true, hdfsConfig);
+					for(FileStatus fstatusInside: fsaInside) {						
+						destPath = new Path(destPath.toString() + "/" + fstatusInside.getPath().getName());						
+						FileUtil.copy(fs, fstatusInside.getPath(), fs, destPath, false, hdfsConfig);
 					}
 				}
 				else {
-					FileUtil.copy(fs, fstatus.getPath(), fs, destPath, true, hdfsConfig);
-				}
+					FileUtil.copy(fs, fstatus.getPath(), fs, destPath, false, hdfsConfig);
+				}			
 			}
+			fs.delete(tempPartitionDir, true);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public static void main(String[] args) throws Exception {
-		RhdfsConfiguration config = new RhdfsConfiguration();
-		DataStoreAppender dsa = new DataStoreAppender(config);
-		//dsa.takeSnapshot();
-		//dsa.snapshotToPartition();
-		dsa.appendToMainDataStore();
+		for (int i = 0; i < 10; i ++) {
+			Thread.sleep(3000);
+			RhdfsConfiguration config = new RhdfsConfiguration();
+			DataStoreAppender dsa = new DataStoreAppender(config);
+			dsa.takeSnapshot();
+			dsa.snapshotToPartition();
+			dsa.appendToMainDataStore();
+			System.out.println("ONETIME DONE");
+		}
 	}
 
 }

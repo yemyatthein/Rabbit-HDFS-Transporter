@@ -124,7 +124,7 @@ public class Utils {
 			job.setOutputValueClass(Text.class);
 			FileInputFormat.addInputPath(job, new Path(otherArgs[0]));
 			FileOutputFormat.setOutputPath(job, new Path(otherArgs[1]));
-			System.exit(job.waitForCompletion(true) ? 0 : 1);
+			job.waitForCompletion(true);
 		}
 	}
 
@@ -161,7 +161,7 @@ public class Utils {
 				FileInputFormat.addInputPath(job, new Path(input));
 			}
 			FileOutputFormat.setOutputPath(job, new Path(output));
-			System.exit(job.waitForCompletion(true) ? 0 : 1);
+			job.waitForCompletion(true);
 		}
 	}
 
