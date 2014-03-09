@@ -87,15 +87,21 @@ public class DataStoreAppender {
 		try {
 			fs = FileSystem.get(hdfsConfig);
 			FileStatus[] fsa = fs.listStatus(tempPartitionDir);
-			for(FileStatus fstatus: fsa) {
+			for (FileStatus fstatus: fsa) {
 				if(!fstatus.isDir()) continue;
 				Path destPath = new Path(destDir + "/" + fstatus.getPath().getName());
 				if(fs.exists(destPath)) {					
 					// TODO: Run hadoop job for compaction if required
-					FileStatus[] fsaInside = fs.listStatus(fstatus.getPath());
-					for(FileStatus fstatusInside: fsaInside) {						
-						destPath = new Path(destPath.toString() + "/" + fstatusInside.getPath().getName());						
-						FileUtil.copy(fs, fstatusInside.getPath(), fs, destPath, false, hdfsConfig);
+					FileStatus[] fsaDestPartitionDir = fs.listStatus(destPath);
+					if (fsaDestPartitionDir.length > 3) {
+						// merging by hadoop job here
+					}
+					else {
+						FileStatus[] fsaInside = fs.listStatus(fstatus.getPath());
+						for (FileStatus fstatusInside: fsaInside) {						
+							destPath = new Path(destPath.toString() + "/" + fstatusInside.getPath().getName());						
+							FileUtil.copy(fs, fstatusInside.getPath(), fs, destPath, false, hdfsConfig);
+						}
 					}
 				}
 				else {
